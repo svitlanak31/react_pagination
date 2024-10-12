@@ -16,60 +16,58 @@ export const Pagination: React.FC<PaginationProps> = ({
   const totalPages = Math.ceil(total / perPage);
 
   const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      onPageChange(page);
+    let newPage = page;
+
+    if (newPage < 1) {
+      newPage = 1;
+    } else if (newPage > totalPages) {
+      newPage = totalPages;
     }
+
+    onPageChange(newPage);
   };
 
   return (
     <ul className="pagination">
       <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-        <a
+        <button
           data-cy="prevLink"
           className="page-link"
-          href="#prev"
-          onClick={(event) => {
-            event.preventDefault();
-            handlePageChange(currentPage - 1);
-          }}
+          onClick={() => handlePageChange(currentPage - 1)}
           aria-disabled={currentPage === 1}
+          disabled={currentPage === 1}
         >
           «
-        </a>
+        </button>
       </li>
 
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
         <li
           key={page}
           className={`page-item ${currentPage === page ? 'active' : ''}`}
         >
-          <a
+          <button
             data-cy="pageLink"
             className="page-link"
-            href={`#${page}`}
-            onClick={(event) => {
-              event.preventDefault();
-              handlePageChange(page);
-            }}
+            onClick={() => handlePageChange(page)}
           >
             {page}
-          </a>
+          </button>
         </li>
       ))}
 
-      <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-        <a
+      <li
+        className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}
+      >
+        <button
           data-cy="nextLink"
           className="page-link"
-          href="#next"
-          onClick={(event) => {
-            event.preventDefault();
-            handlePageChange(currentPage + 1);
-          }}
+          onClick={() => handlePageChange(currentPage + 1)}
           aria-disabled={currentPage === totalPages}
+          disabled={currentPage === totalPages}
         >
           »
-        </a>
+        </button>
       </li>
     </ul>
   );
